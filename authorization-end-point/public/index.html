@@ -1,0 +1,109 @@
+<Html>
+
+<head>
+
+    <style>
+        form {
+            position: absolute;
+            left: 50%;
+            top: 35%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form>
+        <input type='text' name='name' id='email' />
+        <br/>
+        <input type='password' name='password' id='password' />
+        <br/>
+        <button type="button" onclick=hey()> press me</button>
+
+    </form>
+
+
+    <!-- <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyD7IJiE6Gobgr8l3J0pqaNO4F3L0etGHjQ",
+            authDomain: "agentproject-be016.firebaseapp.com",
+            databaseURL: "https://agentproject-be016.firebaseio.com",
+            projectId: "agentproject-be016",
+            storageBucket: "agentproject-be016.appspot.com",
+            messagingSenderId: "53040763571"
+        };
+        firebase.initializeApp(config);
+    </script> -->
+
+
+
+
+
+    <script>
+        function hey() {
+
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            var client_id = getParameterByName('client_id');
+            var redirect_uri = getParameterByName('redirect_uri');
+            var state = getParameterByName('state');
+            var YOUR_PROJECT_ID = 'second-5bcbc';
+            // var ACCESS_TOKEN = 'abcd';
+
+            //ham yahan sy erquest krengy cloud function p or wahan sy access token return hoga wo use krengy
+            //    alert(window.location.ref);
+            // console.log(client_id + '\n' + redirect_uri);
+
+            console.log(email);
+
+            //AJAX REQUEST
+            var xmlHttp = new XMLHttpRequest();
+           xmlHttp.open("POST", 'https://us-central1-second-5bcbc.cloudfunctions.net/sendToken', false); // false for synchronous request
+          // xmlHttp.open("POST", 'https://us-central1-second-5bcbc.cloudfunctions.net/sendToken', false);
+           xmlHttp.setRequestHeader("Content-Type", "application/json");
+            xmlHttp.send(JSON.stringify({ userEmail: email, userPassword: password }));
+
+            // xmlHttp.send();
+            console.log(xmlHttp.responseText + "hh");
+
+            var ACCESS_TOKEN = xmlHttp.responseText;
+            console.log('accessstoken')
+            console.log(ACCESS_TOKEN)
+
+            // const auth = firebase.auth();
+
+            // const promise = auth.signInWithEmailAndPassword(email, password);
+            // promise
+            //     .then(user => console.log(user))
+            //     .catch(e => {
+            //         console.log(e.message)
+            //         alert("authentication error")
+            //     });
+
+
+
+            if (ACCESS_TOKEN == 0)
+                alert("incorrect email or password");
+            else {
+                console.log('redirceting ',ACCESS_TOKEN)
+                alert(ACCESS_TOKEN)
+                window.location.href = 'https://oauth-redirect.googleusercontent.com/r/' + YOUR_PROJECT_ID + '?code=' + ACCESS_TOKEN + '&state=' + state
+            }
+        }
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+    </script>
+</body>
+
+</Html>
